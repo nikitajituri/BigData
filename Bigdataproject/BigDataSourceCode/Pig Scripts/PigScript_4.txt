@@ -1,0 +1,60 @@
+DEFINE XPath org.apache.pig.piggybank.evaluation.xml.XPath();
+POSTS = LOAD '/user/sneha6/data/Posts1' using org.apache.pig.piggybank.storage.XMLLoader('row') as (x:chararray);
+USERSF = LOAD '/user/sneha6/data/Users' using org.apache.pig.piggybank.storage.XMLLoader('row') as (x:chararray);
+QUES1 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)?"\\s*PostTypeId="1"\\s*(AcceptedAnswerId=".*?"\\s*)*?CreationDate="(....).*?"\\s*(DeletionDate=".*?"\\s*)*?Score="(.*)"\\s*ViewCount=".*?"\\s*.*Tags="&lt;([^&]*)&gt;"\\s*AnswerCount="(.*)"\\s*CommentCount=".*?"\\s*(FavoriteCount=".*?"\\s*)*?(ClosedDate=".*?"\\s*)*?(CommunityOwnedDate=".*?"\\s*)*?\\/>')) AS ( id:chararray, accAnsId:chararray, cYear:chararray, delDate:chararray, score:chararray, tag1:chararray, ansCount:chararray,favCount:chararray , closedDate:chararray, commDate:chararray);
+QUES2 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)?"\\s*PostTypeId="1"\\s*(AcceptedAnswerId=".*?"\\s*)*?CreationDate="(....).*?"\\s*(DeletionDate=".*?"\\s*)*?Score="(.*)"\\s*ViewCount=".*?"\\s*.*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount="(.*)"\\s*CommentCount=".*?"\\s*(FavoriteCount=".*?"\\s*)*?(ClosedDate=".*?"\\s*)*?(CommunityOwnedDate=".*?"\\s*)*?\\/>')) AS ( id:chararray, accAnsId:chararray, cYear:chararray, delDate:chararray, score:chararray, tag1:chararray, tag2:chararray, ansCount:chararray,favCount:chararray , closedDate:chararray, commDate:chararray);
+QUES3 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*?)"\\s*PostTypeId="1"\\s*(AcceptedAnswerId=".*?"\\s*)*?CreationDate="(....).*?"\\s*(DeletionDate=".*?"\\s*)*?Score="(.*)"\\s*ViewCount=".*?"\\s*.*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount="(.*)"\\s*CommentCount=".*?"\\s*(FavoriteCount=".*?"\\s*)*?(ClosedDate=".*?"\\s*)*?(CommunityOwnedDate=".*?"\\s*)*?\\/>')) AS ( id:chararray, accAnsId:chararray, cYear:chararray, delDate:chararray, score:chararray, tag1:chararray, tag2:chararray, tag3:chararray, ansCount:chararray,favCount:chararray , closedDate:chararray, commDate:chararray);
+QUES4 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*?)"\\s*PostTypeId="1"\\s*(AcceptedAnswerId=".*?"\\s*)*?CreationDate="(....).*?"\\s*(DeletionDate=".*?"\\s*)*?Score="(.*)"\\s*ViewCount=".*?"\\s*.*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount="(.*)"\\s*CommentCount=".*?"\\s*(FavoriteCount=".*?"\\s*)*?(ClosedDate=".*?"\\s*)*?(CommunityOwnedDate=".*?"\\s*)*?\\/>')) AS ( id:chararray, accAnsId:chararray, cYear:chararray, delDate:chararray, score:chararray, tag1:chararray, tag2:chararray,tag3:chararray,tag4:chararray, ansCount:chararray,favCount:chararray , closedDate:chararray, commDate:chararray);
+QUES5 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*?)"\\s*PostTypeId="1"\\s*(AcceptedAnswerId=".*?"\\s*)*?CreationDate="(....).*?"\\s*(DeletionDate=".*?"\\s*)*?Score="(.*)"\\s*ViewCount=".*?"\\s*.*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount="(.*)"\\s*CommentCount=".*?"\\s*(FavoriteCount=".*?"\\s*)*?(ClosedDate=".*?"\\s*)*?(CommunityOwnedDate=".*?"\\s*)*?\\/>')) AS ( id:chararray, accAnsId:chararray, cYear:chararray, delDate:chararray, score:chararray, tag1:chararray, tag2:chararray,tag3:chararray,tag4:chararray,tag5:chararray, ansCount:chararray,favCount:chararray , closedDate:chararray, commDate:chararray); 
+A11 = FOREACH QUES1 GENERATE (INT) id, tag1 as tag;
+A21 = FOREACH QUES2 GENERATE (INT) id, tag1 as tag;
+A22 = FOREACH QUES2 GENERATE (INT) id, tag2 as tag;
+A31 = FOREACH QUES3 GENERATE (INT) id, tag1 as tag;
+A32 = FOREACH QUES3 GENERATE (INT) id, tag2 as tag;
+A33 = FOREACH QUES3 GENERATE (INT) id, tag3 as tag;
+A41 = FOREACH QUES4 GENERATE (INT) id, tag1 as tag;
+A42 = FOREACH QUES4 GENERATE (INT) id, tag2 as tag;
+A43 = FOREACH QUES4 GENERATE (INT) id, tag3 as tag;
+A44 = FOREACH QUES4 GENERATE (INT) id, tag4 as tag;
+A51 = FOREACH QUES5 GENERATE (INT) id, tag1 as tag;
+A52 = FOREACH QUES5 GENERATE (INT) id, tag2 as tag;
+A53 = FOREACH QUES5 GENERATE (INT) id, tag3 as tag;
+A54 = FOREACH QUES5 GENERATE (INT) id, tag4 as tag;
+A55 = FOREACH QUES5 GENERATE (INT) id, tag5 as tag;
+U1  = UNION ONSCHEMA A11, A21;
+U2  = UNION ONSCHEMA U1 , A22;
+U3  = UNION ONSCHEMA U2 , A31;
+U4  = UNION ONSCHEMA U3 , A32;
+U5  = UNION ONSCHEMA U4 , A33;
+U6  = UNION ONSCHEMA U5 , A41;
+U7  = UNION ONSCHEMA U6 , A42;
+U8  = UNION ONSCHEMA U7 , A43;
+U9  = UNION ONSCHEMA U8 , A44;
+U10 = UNION ONSCHEMA U9 , A51;
+U11 = UNION ONSCHEMA U10, A52;
+U12 = UNION ONSCHEMA U11, A53;
+U13 = UNION ONSCHEMA U12, A54;
+U14 = UNION ONSCHEMA U13, A55;
+ANSW = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*PostTypeId="2"\\s*ParentId="(.*?)"\\s*.*OwnerUserId="(.*?)"\\s*.*\\/>')) AS (answerId:chararray, questionId:chararray, ownerUserId:chararray);
+ANSW1 = FOREACH ANSW GENERATE (INT) answerId, (INT) questionId, (INT) ownerUserId;
+USERS = FOREACH USERSF GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*Reputation=".*"\\s*CreationDate=".*"\\s*DisplayName="(.*)"\\s*LastAccessDate=".*"\\s*Views=".*"\\s*UpVotes=".*"\\s*DownVotes=".*"\\s*(ProfileImageUrl="(.*)")*\\s*AccountId=".*"\\s*\\/>')) AS (usersId:chararray, displayName:chararray, profileImageUrl:chararray, profileImage:chararray);
+USERS1 = FOREACH USERS GENERATE (INT) usersId, displayName, profileImage;
+
+
+B = JOIN U14 BY id, ANSW1 BY questionId;
+C = JOIN B BY ownerUserId FULL, USERS1 BY usersId;
+D = GROUP C BY (tag,ownerUserId);
+E = FOREACH D GENERATE FLATTEN(group) AS (tag, ownerUserId), COUNT(C.answerId) AS ansCount, C.displayName as displayName, C.profileImage as profileImage;
+E1 = FOREACH E GENERATE tag,ownerUserId, ansCount, FLATTEN(displayName) AS displayName, FLATTEN(profileImage) AS profileImage;
+F =  GROUP E1 BY (tag);
+G = FOREACH F{
+	H = ORDER E1 BY ansCount DESC;
+	I = DISTINCT H;
+	J = LIMIT I 5;
+	GENERATE group, FLATTEN(J);
+	};
+
+K = FILTER G BY tag is not null;
+
+DUMP K;
+

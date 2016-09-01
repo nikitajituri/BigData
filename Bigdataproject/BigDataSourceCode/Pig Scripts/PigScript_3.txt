@@ -1,0 +1,60 @@
+DEFINE XPath org.apache.pig.piggybank.evaluation.xml.XPath();
+POSTS = LOAD '/user/sneha6/data/Posts1' using org.apache.pig.piggybank.storage.XMLLoader('row') as (x:chararray);
+QUES1 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*PostTypeId="1"\\s*.*CreationDate=".*?"\\s*.*Score=".*"\\s*ViewCount="(.*?)"\\s*.*Title="(.*)"\\s*Tags="&lt;([^&]*)&gt;"\\s*AnswerCount=".*"\\s*CommentCount=".*?"\\s*.*\\/>')) AS ( id:chararray, score:chararray, title:chararray, tag1:chararray);
+
+QUES2 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*PostTypeId="1"\\s*.*CreationDate=".*?"\\s*.*Score=".*"\\s*ViewCount="(.*?)"\\s*.*Title="(.*)"\\s*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount=".*"\\s*CommentCount=".*?"\\s*.*\\/>')) AS ( id:chararray, score:chararray, title:chararray, tag1:chararray, tag2:chararray);
+
+QUES3 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*PostTypeId="1"\\s*.*CreationDate=".*?"\\s*.*Score=".*"\\s*ViewCount="(.*?)"\\s*.*Title="(.*)"\\s*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount=".*"\\s*CommentCount=".*?"\\s*.*\\/>')) AS ( id:chararray, score:chararray, title:chararray, tag1:chararray, tag2:chararray, tag3:chararray);
+
+QUES4 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*PostTypeId="1"\\s*.*CreationDate=".*?"\\s*.*Score=".*"\\s*ViewCount="(.*?)"\\s*.*Title="(.*)"\\s*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount=".*"\\s*CommentCount=".*?"\\s*.*\\/>')) AS ( id:chararray, score:chararray, title:chararray, tag1:chararray, tag2:chararray,tag3:chararray,tag4:chararray);
+
+QUES5 = FOREACH POSTS GENERATE FLATTEN(REGEX_EXTRACT_ALL(x,'<row\\s*Id="(.*)"\\s*PostTypeId="1"\\s*.*CreationDate=".*?"\\s*.*Score=".*"\\s*ViewCount="(.*?)"\\s*.*Title="(.*)"\\s*Tags="&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;&lt;([^&]*)&gt;"\\s*AnswerCount=".*"\\s*CommentCount=".*?"\\s*.*\\/>')) AS ( id:chararray, score:chararray, title:chararray, tag1:chararray, tag2:chararray, tag3:chararray,tag4:chararray, tag5:chararray); 
+
+
+A11 = FOREACH QUES1 GENERATE (INT) id, tag1 as tag, (INT) score, title, tag1 as tag1, '' as tag2, '' as tag3, '' as tag4, '' as tag5;
+A21 = FOREACH QUES2 GENERATE (INT) id, tag1 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, '' as tag3, '' as tag4, '' as tag5;
+A22 = FOREACH QUES2 GENERATE (INT) id, tag2 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, '' as tag3, '' as tag4, '' as tag5;
+A31 = FOREACH QUES3 GENERATE (INT) id, tag1 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, '' as tag4, '' as tag5;
+A32 = FOREACH QUES3 GENERATE (INT) id, tag2 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, '' as tag4, '' as tag5;
+A33 = FOREACH QUES3 GENERATE (INT) id, tag3 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, '' as tag4, '' as tag5;
+A41 = FOREACH QUES4 GENERATE (INT) id, tag1 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, '' as tag5;
+A42 = FOREACH QUES4 GENERATE (INT) id, tag2 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, '' as tag5;
+A43 = FOREACH QUES4 GENERATE (INT) id, tag3 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, '' as tag5;
+A44 = FOREACH QUES4 GENERATE (INT) id, tag4 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, '' as tag5;
+A51 = FOREACH QUES5 GENERATE (INT) id, tag1 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, tag5 as tag5;
+A52 = FOREACH QUES5 GENERATE (INT) id, tag2 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, tag5 as tag5;
+A53 = FOREACH QUES5 GENERATE (INT) id, tag3 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, tag5 as tag5;
+A54 = FOREACH QUES5 GENERATE (INT) id, tag4 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, tag5 as tag5;
+A55 = FOREACH QUES5 GENERATE (INT) id, tag5 as tag, (INT) score, title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, tag5 as tag5;
+
+
+U1  = UNION ONSCHEMA A11, A21;
+U2  = UNION ONSCHEMA U1 , A22;
+U3  = UNION ONSCHEMA U2, A31;
+U4  = UNION ONSCHEMA U3 , A32;
+U5  = UNION ONSCHEMA U4 , A33;
+U6  = UNION ONSCHEMA U5 , A41;
+U7  = UNION ONSCHEMA U6 , A42;
+U8  = UNION ONSCHEMA U7 , A43;
+U9  = UNION ONSCHEMA U8 , A44;
+U10 = UNION ONSCHEMA U9 , A51;
+U11 = UNION ONSCHEMA U10, A52;
+U12 = UNION ONSCHEMA U11, A53;
+U13 = UNION ONSCHEMA U12, A54;
+U14 = UNION ONSCHEMA U13, A55;
+
+B = GROUP U14 BY (tag);
+C = FOREACH B {
+	D = order U14 BY score DESC;
+	E = LIMIT D 5;
+	GENERATE group, FLATTEN(E);
+	};
+
+F = FOREACH C GENERATE group as tag, id as id, score as score, title as title, tag1 as tag1, tag2 as tag2, tag3 as tag3, tag4 as tag4, tag5 as tag5;
+
+G = FILTER F BY tag is not null;
+
+DUMP G;
+
+
+
